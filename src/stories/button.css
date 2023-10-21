@@ -9,10 +9,7 @@
 }
 .storybook-button--primary {
   color: white;
-  background-color: #1ea7fd;
-  & span {
-    color: red;
-  }
+  background-color: #037AC4;
 }
 .storybook-button--secondary {
   color: #333;
