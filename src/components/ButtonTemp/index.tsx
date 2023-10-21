@@ -1,5 +1,5 @@
 import { PropsWithChildren, useState } from "react";
-import "./styles.css";
+import styles from "./styles.module.scss";
 
 type Props = PropsWithChildren<{
   onClick?: (
@@ -7,12 +7,16 @@ type Props = PropsWithChildren<{
   ) => void | Promise<void>;
 }>;
 
-export const Button = ({ children, onClick }: Props) => {
+export const ButtonTemp = ({ children, onClick }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  return <button onClick={onClick}>{children}</button>;
+  return (
+    <button className={styles.button} onClick={onClick}>
+      {children}
+    </button>
+  );
 };

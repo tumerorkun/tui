@@ -5,6 +5,7 @@ import typescript from "@rollup/plugin-typescript";
 import terser from "@rollup/plugin-terser";
 import external from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
+import stringHash from "string-hash";
 
 const packageJson = require("./package.json");
 
@@ -29,7 +30,13 @@ export default [
       resolve(),
       commonjs(),
       typescript(),
-      postcss(),
+      postcss({
+        minimize: true,
+        modules: {
+          generateScopedName: (name, filename, css) =>
+            `_${stringHash(css).toString(36).substring(0, 7)}`,
+        },
+      }),
       terser(),
     ],
   },
