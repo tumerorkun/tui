@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { within, userEvent } from "@storybook/testing-library";
 import { expect } from "@storybook/jest";
+import { rest } from "msw";
 
 import { Page } from "./Page";
 
@@ -16,7 +17,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const LoggedOut: Story = {};
+export const LoggedOut: Story = {
+  parameters: {
+    msw: [
+      rest.get("/test", (_req, res, ctx) => {
+        return res(ctx.json({ a: "msw response" }));
+      }),
+    ],
+  },
+};
 
 // More on interaction testing: https://storybook.js.org/docs/react/writing-tests/interaction-testing
 export const LoggedIn: Story = {

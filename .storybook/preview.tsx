@@ -1,7 +1,10 @@
 import type { Preview } from "@storybook/react";
 import { dark } from "../src/theme/dark";
 import { light } from "../src/theme/light";
-import React, { PropsWithChildren } from "react";
+import React, { FC, PropsWithChildren } from "react";
+import { initialize, mswDecorator } from "msw-storybook-addon";
+
+initialize({ onUnhandledRequest: "bypass" });
 
 const preview: Preview = {
   globalTypes: {
@@ -42,7 +45,10 @@ const ThemeProvider = ({
   return <>{children}</>;
 };
 
-const withThemeProvider = (Story, context) => {
+const withThemeProvider = (
+  Story: FC,
+  context: { globals: { theme: "light" | "dark" } }
+) => {
   const theme = context.globals.theme === "light" ? light : dark;
   return (
     <ThemeProvider theme={theme}>
@@ -51,4 +57,4 @@ const withThemeProvider = (Story, context) => {
   );
 };
 
-export const decorators = [withThemeProvider];
+export const decorators = [mswDecorator, withThemeProvider];
