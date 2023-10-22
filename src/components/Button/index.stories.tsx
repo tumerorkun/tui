@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 import { Button } from ".";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import React from "react";
-import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {

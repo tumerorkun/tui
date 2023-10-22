@@ -56,7 +56,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
         ref={refMapper}
         className={styles.button}
         aria-busy={isBusy}
-        role="button"
         onClick={isBusy ? undefined : onClickHandler}
       >
         <div className={styles.content}>{children}</div>
