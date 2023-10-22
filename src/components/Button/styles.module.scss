@@ -1,0 +1,25 @@
+.button {
+  background-color: red;
+  display: flex;
+  position: relative;
+  padding: 8px;
+  box-sizing: border-box;
+  border: none;
+  overflow: hidden;
+  & .content {
+    z-index: 0;
+  }
+  & .is_busy {
+    z-index: 1;
+    user-select: none;
+    display: inherit;
+    padding: inherit;
+    box-sizing: inherit;
+    background-color: inherit;
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
