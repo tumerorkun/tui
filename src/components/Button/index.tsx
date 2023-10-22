@@ -44,7 +44,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
           await onClick(e);
           busyStateFromClickEvent.current = false;
           if (buttonRef.current && !busyStateFromProps.current) {
-            console.log("set state to false");
             setIsBusy(false);
           }
         }
