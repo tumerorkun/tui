@@ -19,6 +19,8 @@ type Props = PropsWithChildren<{
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
   ({ children, onClick, isLoading = false, loadingText }, ref) => {
+    const [isBusy, setIsBusy] = useState(isLoading);
+
     const [buttonRef, refMapper] = useRefMiddleware(ref);
 
     const busyStateFromClickEvent = useRef(false);
@@ -26,7 +28,6 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const busyStateFromProps = useRef(isLoading);
     busyStateFromProps.current = isLoading;
 
-    const [isBusy, setIsBusy] = useState(isLoading);
     useUpdateEffect(
       useCallback(() => {
         if (!busyStateFromClickEvent.current) {

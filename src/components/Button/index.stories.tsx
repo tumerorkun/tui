@@ -22,22 +22,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Template = ({ ...args }) => {
-  const [buttonVisible, setButtonVisible] = useState(true);
+  const [buttonHidden, setButtonHidden] = useState<0 | 1 | 2>(0);
   const onClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     args.onClick?.(e);
+    setButtonHidden(1);
+
     const response = await fetch("test");
     const data = await response.json();
-    setButtonVisible(false);
+    setButtonHidden(2);
     console.log("data", data);
   };
-  if (!buttonVisible) {
+  if (buttonHidden === 2) {
     return <span>button unmounted to check is there any leak</span>;
   }
+
   return (
     <Button
-      isLoading={args.isLoading}
+      isLoading={buttonHidden === 1 || args.isLoading}
       onClick={onClick}
       loadingText={args.loadingText}
     >
