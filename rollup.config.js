@@ -9,6 +9,13 @@ import stringHash from "string-hash";
 
 const packageJson = require("./package.json");
 
+const classNameHashing = (name, filename, css) => {
+  const nameHash = stringHash(name).toString(36).substring(0, 7);
+  const fileNameHash = stringHash(filename).toString(36).substring(0, 7);
+  const cssHash = stringHash(css).toString(36).substring(0, 7);
+  return `tui_${nameHash}${fileNameHash}__${cssHash}`;
+};
+
 const components = fs
   .readdirSync("src/components")
   .filter((file) => file !== "common")
@@ -31,12 +38,44 @@ export default [
       commonjs(),
       typescript(),
       postcss({
+        extract: true,
         minimize: true,
-        modules: {
-          generateScopedName: (name, filename, css) =>
-            `_${stringHash(css).toString(36).substring(0, 7)}`,
-        },
+        namedExports: true,
+        modules: { generateScopedName: classNameHashing },
       }),
+      terser(),
+    ],
+  },
+  {
+    input: { index: "src/index.ts", ...components },
+    output: [{ dir: "dist", format: "esm", sourcemap: true }],
+    plugins: [
+      external(),
+      resolve(),
+      commonjs(),
+      typescript(),
+      postcss({
+        include: "src/styles/common.module.scss",
+        extract: "common/styles.css",
+        minimize: true,
+        namedExports: true,
+        modules: { generateScopedName: classNameHashing },
+      }),
+      postcss({
+        include: "src/components/Button/styles.module.scss",
+        extract: "components/Button/index.css",
+        minimize: true,
+        namedExports: true,
+        modules: { generateScopedName: classNameHashing },
+      }),
+      postcss({
+        include: "src/components/ButtonTemp/styles.module.scss",
+        extract: "components/ButtonTemp/index.css",
+        minimize: true,
+        namedExports: true,
+        modules: { generateScopedName: classNameHashing },
+      }),
+
       terser(),
     ],
   },

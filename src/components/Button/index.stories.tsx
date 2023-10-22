@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 import { Button } from ".";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
@@ -33,12 +33,17 @@ const Template = ({ ...args }) => {
     setButtonHidden(2);
     console.log("data", data);
   };
+  const ref = useRef(null);
+  useEffect(() => {
+    console.log("button ref", ref.current);
+  }, []);
   if (buttonHidden === 2) {
     return <span>button unmounted to check is there any leak</span>;
   }
 
   return (
     <Button
+      ref={ref}
       isLoading={buttonHidden === 1 || args.isLoading}
       onClick={onClick}
       loadingText={args.loadingText}
@@ -52,7 +57,7 @@ const Template = ({ ...args }) => {
 export const Primary: Story = {
   render: ({ ...args }) => <Template {...args} />,
   args: {
-    isLoading: true,
+    isLoading: false,
     children: "Button AAA",
     loadingText: "Loading",
   },
