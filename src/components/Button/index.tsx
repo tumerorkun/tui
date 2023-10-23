@@ -1,67 +1,63 @@
-import {
-  PropsWithChildren,
-  forwardRef,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, forwardRef, useCallback, useState } from "react";
 import styles from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
 import { useRefMiddleware } from "../../hooks/useRefMiddleware";
-import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 
-type ButtonClickEvent = React.MouseEvent<HTMLButtonElement, MouseEvent>;
 type Props = PropsWithChildren<{
-  isLoading?: boolean;
-  loadingText?: string;
-  onClick?: (e: ButtonClickEvent) => void | Promise<void>;
+  isBusy?: boolean;
+  disabled?: boolean;
+  className?: string;
+  busyText?: string;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => void | Promise<void>;
 }>;
 
 export const Button = forwardRef<HTMLButtonElement, Props>(
-  ({ children, onClick, isLoading = false, loadingText }, ref) => {
-    const [isBusy, setIsBusy] = useState(isLoading);
-
+  (
+    {
+      children,
+      onClick,
+      isBusy = false,
+      busyText,
+      className,
+      disabled = false,
+    },
+    ref
+  ) => {
     const [buttonRef, refMapper] = useRefMiddleware(ref);
 
-    const busyStateFromClickEvent = useRef(false);
+    const [isEventBusy, setIsEventBusy] = useState(false);
 
-    const busyStateFromProps = useRef(isLoading);
-    busyStateFromProps.current = isLoading;
-
-    useUpdateEffect(
-      useCallback(() => {
-        if (!busyStateFromClickEvent.current) {
-          setIsBusy(isLoading);
-        }
-      }, [isLoading])
-    );
+    const isButtonBusy = isBusy || isEventBusy;
 
     const onClickHandler = useCallback(
-      async (e: ButtonClickEvent) => {
+      async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (onClick) {
-          busyStateFromClickEvent.current = true;
-          setIsBusy(true);
+          setIsEventBusy(true);
           await onClick(e);
-          busyStateFromClickEvent.current = false;
-          if (buttonRef.current && !busyStateFromProps.current) {
-            setIsBusy(false);
+          if (buttonRef.current) {
+            setIsEventBusy(false);
           }
         }
       },
       [onClick]
     );
 
+    const csName = className ? styles[className] ?? className : "";
+
     return (
       <button
         ref={refMapper}
-        className={styles.button}
-        aria-busy={isBusy}
-        onClick={isBusy ? undefined : onClickHandler}
+        disabled={disabled}
+        className={`${styles.button} ${csName}`.trim()}
+        aria-busy={isButtonBusy}
+        onClick={isButtonBusy ? undefined : onClickHandler}
       >
         <div className={styles.content}>{children}</div>
-        {isBusy ? (
+        {isButtonBusy ? (
           <div className={`${commonStyles.absolute_fill} ${styles.is_busy}`}>
-            <span>{loadingText}</span>
+            <span>{busyText}</span>
           </div>
         ) : null}
       </button>

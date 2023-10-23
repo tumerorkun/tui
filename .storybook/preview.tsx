@@ -1,4 +1,5 @@
 import type { Preview } from "@storybook/react";
+import { themes } from "@storybook/theming";
 import { dark } from "../src/theme/dark";
 import { light } from "../src/theme/light";
 import React, { FC, PropsWithChildren } from "react";
@@ -33,6 +34,7 @@ const preview: Preview = {
     actions: { argTypesRegex: "^on[A-Z].*" },
     controls: { matchers: { color: /(background|color)$/i, date: /Date$/i } },
     backgrounds: { disable: true },
+    // docs: { theme: themes.dark },
   },
 };
 

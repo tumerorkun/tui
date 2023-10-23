@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
-import { Button } from ".";
-import { useEffect, useRef, useState } from "react";
+import { Button as Component } from ".";
+import { useState } from "react";
 import React from "react";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta = {
   title: "Components/Button",
-  component: Button,
+  component: Component,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/react/configure/story-layout
     // layout: "centered",
@@ -15,12 +15,12 @@ const meta = {
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof Component>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Template = ({ ...args }) => {
+const Button = ({ ...args }) => {
   const [buttonHidden, setButtonHidden] = useState<0 | 1 | 2>(0);
   const onClick = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -29,37 +29,80 @@ const Template = ({ ...args }) => {
     setButtonHidden(1);
 
     const response = await fetch("test");
-    const data = await response.json();
+    await response.json();
     setButtonHidden(2);
-    console.log("data", data);
   };
-  const ref = useRef(null);
-  useEffect(() => {
-    console.log("button ref", ref.current);
-  }, []);
-  if (buttonHidden === 2) {
-    return <span>button unmounted to check is there any leak</span>;
-  }
+
+  // if (buttonHidden === 2) {
+  //   return <span>button unmounted to check is there any leak</span>;
+  // }
 
   return (
-    <Button
-      ref={ref}
-      isLoading={buttonHidden === 1 || args.isLoading}
+    <Component
+      isBusy={buttonHidden === 1 || args.isBusy}
+      {...args}
       onClick={onClick}
-      loadingText={args.loadingText}
     >
       {args.children}
-    </Button>
+    </Component>
   );
 };
 
 // More on writing stories with args: https://storybook.js.org/docs/react/writing-stories/args
-export const Primary: Story = {
-  render: ({ ...args }) => <Template {...args} />,
+export const Enable: Story = {
+  render: Button,
   args: {
-    isLoading: false,
+    isBusy: false,
     children: "Button AAA",
-    loadingText: "Loading",
+    busyText: "Loading",
+  },
+  parameters: {
+    msw: [
+      rest.get("/test", (_req, res, ctx) => {
+        return res(ctx.delay(3000), ctx.json({ a: "msw response" }));
+      }),
+    ],
+  },
+};
+export const Focus: Story = {
+  render: Button,
+  args: {
+    isBusy: false,
+    children: "Button AAA",
+    busyText: "Loading",
+    className: "focus",
+  },
+  parameters: {
+    msw: [
+      rest.get("/test", (_req, res, ctx) => {
+        return res(ctx.delay(3000), ctx.json({ a: "msw response" }));
+      }),
+    ],
+  },
+};
+export const Hover: Story = {
+  render: Button,
+  args: {
+    isBusy: false,
+    children: "Button AAA",
+    busyText: "Loading",
+    className: "hover",
+  },
+  parameters: {
+    msw: [
+      rest.get("/test", (_req, res, ctx) => {
+        return res(ctx.delay(3000), ctx.json({ a: "msw response" }));
+      }),
+    ],
+  },
+};
+export const Disabled: Story = {
+  render: Button,
+  args: {
+    isBusy: false,
+    children: "Button AAA",
+    busyText: "Loading",
+    disabled: true,
   },
   parameters: {
     msw: [

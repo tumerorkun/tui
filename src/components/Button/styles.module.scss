@@ -1,11 +1,32 @@
 .button {
-  background-color: red;
+  --button-enabled-bg-color: red;
+  --button-disabled-bg-color: gray;
+  --button-focus-bg-color: pink;
+  --button-hover-bg-color: palevioletred;
+
+  --button-border-radius-top-left: 8px;
+  --button-border-radius-top-right: 8px;
+  --button-border-radius-bottom-right: 8px;
+  --button-border-radius-bottom-left: 8px;
+
+  & * {
+    user-select: none;
+    pointer-events: none;
+  }
+
+  border: none;
+  border-radius: var(--button-border-radius-top-left)
+    var(--button-border-radius-top-right)
+    var(--button-border-radius-bottom-right)
+    var(--button-border-radius-bottom-left);
+  background-color: var(--button-enabled-bg-color);
+  cursor: pointer;
   display: flex;
   position: relative;
   padding: 8px;
   box-sizing: border-box;
-  border: none;
   overflow: hidden;
+
   & .content {
     z-index: 0;
   }
@@ -21,5 +42,21 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+  }
+
+  &.focus,
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    background-color: var(--button-focus-bg-color);
+  }
+  &.hover,
+  &:hover {
+    background-color: var(--button-hover-bg-color);
+  }
+
+  &:disabled {
+    background-color: var(--button-disabled-bg-color);
+    cursor: not-allowed;
   }
 }
