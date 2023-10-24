@@ -1,0 +1,26 @@
+.color {
+  width: 90%;
+  height: 100px;
+  border-radius: 8px;
+  align-self: center;
+}
+
+.colorSet {
+  width: 100%;
+  max-width: 312px;
+  display: flex;
+  flex-direction: column;
+
+  & table {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    & tbody {
+      filter: none !important;
+      & td span {
+        line-height: 32px;
+      }
+    }
+  }
+}
