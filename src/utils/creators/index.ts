@@ -1,3 +1,7 @@
+function rgbToHex(r: number, g: number, b: number) {
+  return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+}
+
 export const hexToPercentage = (hex: string) => {
   return Math.round((parseInt(hex, 16) / 255) * 100);
 };
@@ -5,6 +9,14 @@ export const percentageToHex = (percent: number) => {
   return Math.round((percent / 100) * 255)
     .toString(16)
     .padStart(2, "0");
+};
+
+export const blendWith = (
+  background: number = 255,
+  color: number,
+  alpha: number
+) => {
+  return color * alpha + background * (1 - alpha);
 };
 
 export const normalizeColor = (color: string, opacity?: number) => {
@@ -52,11 +64,20 @@ export const normalizeColor = (color: string, opacity?: number) => {
       /^#(?<red>[a-f\d]{2})(?<green>[a-f\d]{2})(?<blue>[a-f\d]{2})/.exec(color)
         ?.groups ?? {};
 
+    const noAlphaColor = rgbToHex(
+      blendWith(255, parseInt(red, 16), (opacity ?? 100) / 100),
+      blendWith(255, parseInt(green, 16), (opacity ?? 100) / 100),
+      blendWith(255, parseInt(blue, 16), (opacity ?? 100) / 100)
+    );
+
     return {
       sampleColor: `#${red}${green}${blue}${
-        opacity !== undefined ? percentageToHex(opacity) : ""
+        opacity !== undefined && opacity !== 100 ? percentageToHex(opacity) : ""
       }`,
-      color: `#${red}${green}${blue}`,
+      noAlphaColor: noAlphaColor,
+      color: `#${red}${green}${blue}${
+        opacity !== undefined && opacity !== 100 ? percentageToHex(opacity) : ""
+      }`,
       isHex: true,
       channels: { red, green, blue },
       opacity: opacity,
