@@ -1,11 +1,10 @@
 import { Meta, Canvas, Controls, Story, Primary } from "@storybook/blocks";
-import { ColorSet } from ".";
+import { ColorGroups } from ".";
+import { getColorGroupIDs } from "./db";
 import * as Stories from "./index.stories";
 
 <Meta title="Colors" of={Stories} />
 
-# Colors
+<ColorGroups />
 
----
-
-<ColorSet />
+{/* <ColorSet /> */}
