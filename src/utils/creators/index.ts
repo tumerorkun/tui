@@ -84,6 +84,10 @@ export const normalizeColor = (color: string, opacity?: number) => {
         sampleColor: `#${red}${green}${blue}${
           opacity !== undefined && opacity !== 100
             ? percentageToHex(opacity)
+            : opacity === 100
+            ? ""
+            : opacityFromHex
+            ? percentageToHex(opacityFromHex)
             : ""
         }`,
         noAlphaColor: noAlphaColor,
