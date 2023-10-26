@@ -31,7 +31,7 @@ export const Color = ({
   const normalized = normalizeColor(color)!;
   const [currentColor, setColor] = useState(normalized);
   const [colorName, setName] = useState(name);
-  const [noAlpha, setNoAlpha] = useState(false);
+  const [noAlpha, setNoAlpha] = useState(true);
 
   const [currentOpacity, setOpacity] = useState(normalized?.opacity ?? 100);
 
@@ -125,7 +125,7 @@ export const Color = ({
           ...(currentColor?.sampleColor.includes("#")
             ? { noAlpha: { name: "no Alpha", control: { type: "boolean" } } }
             : {}),
-          ...(currentColor?.sampleColor.includes("#")
+          ...(currentColor?.sampleColor.includes("#") && !noAlpha
             ? {
                 opacity: {
                   name: "Opacity",
