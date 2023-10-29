@@ -88,6 +88,22 @@ export const setColorGroup = (id: string, name: string) => {
   }
 };
 
+export const removeColorGroup = (id: string) => {
+  const colors = getColors();
+  if (colors[id]) {
+    delete colors[id];
+    return setColors(colors);
+  }
+};
+
+export const removeColor = (groupId: string, id: string) => {
+  const colors = getColors();
+  if (colors[groupId] && colors[groupId].colors[id]) {
+    delete colors[groupId].colors[id];
+    return setColors(colors);
+  }
+};
+
 export const setColortoDb = ({
   groupId,
   color,

@@ -9,9 +9,11 @@ import {
   getColors,
   getColorsIn,
   isColorGroupExists,
+  removeColor,
+  removeColorGroup,
   setColorGroup,
   setColortoDb,
-} from "./db";
+} from "../../utils/creators/db";
 import { Button } from "../../components/Button";
 import { nanoid } from "nanoid";
 
@@ -21,25 +23,27 @@ export const Color = ({
   color,
   name,
   onCreate,
+  onRemove,
 }: {
   id?: string;
   groupId: string;
   color: string;
   name: string;
   onCreate?: () => void;
+  onRemove?: () => void;
 }) => {
   const normalized = normalizeColor(color)!;
   const [currentColor, setColor] = useState(normalized);
   const [colorName, setName] = useState(name);
-  const [noAlpha, setNoAlpha] = useState(true);
-
+  const [alphaChannel, setNoAlpha] = useState(false);
+  const noAlpha = !alphaChannel;
   const [currentOpacity, setOpacity] = useState(normalized?.opacity ?? 100);
 
   const updateArgs = ({
     name: updateName,
     color: updateColor,
     opacity: updateOpacity,
-    noAlpha: unpdateNoAlpha,
+    alphaChannel: unpdateNoAlpha,
   }: Args) => {
     if (unpdateNoAlpha !== undefined) {
       setColortoDb({
@@ -118,12 +122,12 @@ export const Color = ({
               : currentColor.color,
           name: colorName,
           opacity: currentOpacity,
-          ...(currentColor?.sampleColor.includes("#") ? { noAlpha } : {}),
+          ...(currentColor?.sampleColor.includes("#") ? { alphaChannel } : {}),
         }}
         rows={{
           color: { name: "Color", control: { type: "color" } },
           ...(currentColor?.sampleColor.includes("#")
-            ? { noAlpha: { name: "no Alpha", control: { type: "boolean" } } }
+            ? { alphaChannel: { name: "Alpha", control: { type: "boolean" } } }
             : {}),
           ...(currentColor?.sampleColor.includes("#") && !noAlpha
             ? {
@@ -138,6 +142,15 @@ export const Color = ({
             : {}),
         }}
       />
+      <div
+        style={{
+          alignSelf: "flex-end",
+          display: "flex",
+          flexDirection: "row-reverse",
+        }}
+      >
+        <Button onClick={onRemove}>Remove</Button>
+      </div>
     </div>
   );
 };
@@ -149,6 +162,7 @@ export const ColorGroup = ({
   id: string;
   onCreate?: () => void;
 }) => {
+  const [, setUpdate] = useState(false);
   const isGroupExists = isColorGroupExists(id);
 
   const colors = getColors();
@@ -184,14 +198,25 @@ export const ColorGroup = ({
               rows={{ groupName: { control: { type: "text" } } }}
             />
           </h3>
-          <Button
-            disabled={Boolean(newColorId)}
-            onClick={() => {
-              setNewColorId(nanoid());
-            }}
-          >
-            Add New Color
-          </Button>
+          <div style={{ display: "flex" }}>
+            <Button
+              disabled={Boolean(newColorId)}
+              onClick={() => {
+                removeColorGroup(id);
+                setUpdate((u) => !u);
+              }}
+            >
+              Remove Group
+            </Button>
+            <Button
+              disabled={Boolean(newColorId)}
+              onClick={() => {
+                setNewColorId(nanoid());
+              }}
+            >
+              Add Color
+            </Button>
+          </div>
         </div>
 
         <div className={styles.group}>
@@ -200,20 +225,26 @@ export const ColorGroup = ({
               key={newColorId}
               id={newColorId}
               groupId={id}
-              color=""
+              color="rgba(0, 0, 0, 0)"
               name="New Color"
               onCreate={() => setNewColorId(null)}
             />
           ) : null}
-          {groupColors.map(({ id: colorId, name: colorName, value }) => (
-            <Color
-              id={colorId}
-              groupId={id}
-              key={colorId}
-              color={value}
-              name={colorName}
-            />
-          ))}
+          {groupColors
+            .sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1))
+            .map(({ id: colorId, name: colorName, value }) => (
+              <Color
+                id={colorId}
+                groupId={id}
+                key={colorId}
+                color={value}
+                name={colorName}
+                onRemove={() => {
+                  removeColor(id, colorId);
+                  setUpdate((u) => !u);
+                }}
+              />
+            ))}
         </div>
       </div>
       <hr />
@@ -234,7 +265,7 @@ export const ColorGroups = () => {
               setNewColorGroup(nanoid());
             }}
           >
-            Add New Color Group
+            Add Color Group
           </Button>
         </div>
       </div>
