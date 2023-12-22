@@ -1,0 +1,65 @@
+.primary {
+  --button-enabled-bg-color: #1262e2;
+  --button-disabled-bg-color: #cccccc;
+  --button-focus-bg-color: #1262e2;
+  --button-hover-bg-color: #296ede;
+
+  --button-enabled-color: white;
+  --button-disabled-color: #999999;
+  --button-focus-color: white;
+  --button-hover-color: white;
+}
+
+.secondary {
+  --button-enabled-bg-color: #4b80d4;
+  --button-disabled-bg-color: #cccccc;
+  --button-focus-bg-color: #4b80d4;
+  --button-hover-bg-color: #437cd7;
+
+  --button-enabled-color: white;
+  --button-disabled-color: #999999;
+  --button-focus-color: white;
+  --button-hover-color: white;
+}
+
+.tertiary {
+  --button-enabled-bg-color: transparent;
+  --button-disabled-bg-color: transparent;
+  --button-focus-bg-color: transparent;
+  --button-hover-bg-color: transparent;
+
+  --button-enabled-color: #1262e2;
+  --button-disabled-color: #999999;
+  --button-focus-color: #1262e2;
+  --button-hover-color: #71a9e6;
+
+  --button-border-width: 2px;
+  --button-border-color: #1262e2;
+  --button-border-focus-color: #1262e2;
+  --button-border-hover-color: #71a9e6;
+  --button-border-disabled-color: #999999;
+}
+
+.ghost {
+  --button-enabled-bg-color: transparent;
+  --button-disabled-bg-color: #cccccc;
+  --button-focus-bg-color: transparent;
+  --button-hover-bg-color: #f3f3f3;
+
+  --button-enabled-color: #1262e2;
+  --button-disabled-color: #999999;
+  --button-focus-color: #1262e2;
+  --button-hover-color: #437cd7;
+}
+
+.danger {
+  --button-enabled-bg-color: red;
+  --button-disabled-bg-color: darkred;
+  --button-focus-bg-color: red;
+  --button-hover-bg-color: palevioletred;
+
+  --button-enabled-color: white;
+  --button-disabled-color: white;
+  --button-focus-color: white;
+  --button-hover-color: white;
+}

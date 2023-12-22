@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
 import { Button as Component } from ".";
+import { AnimatedReload } from "../../icons/Reload";
 import { useState } from "react";
 import React from "react";
 
@@ -14,6 +15,12 @@ const meta = {
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
   tags: ["autodocs"],
+  argTypes: {
+    variant: {
+      control: "select",
+      options: ["primary", "secondary", "ghost", "tertiary", "danger"],
+    },
+  },
   // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
 } satisfies Meta<typeof Component>;
 
@@ -53,8 +60,23 @@ export const Enable: Story = {
   render: Button,
   args: {
     isBusy: false,
-    children: "Button AAA",
-    busyText: "Loading",
+    children: "Button",
+    whenBusy: <AnimatedReload primaryColor="white" size={14} />,
+  },
+  parameters: {
+    msw: [
+      rest.get("/test", (_req, res, ctx) => {
+        return res(ctx.delay(3000), ctx.json({ a: "msw response" }));
+      }),
+    ],
+  },
+};
+export const IconButton: Story = {
+  render: Button,
+  args: {
+    isBusy: false,
+    children: <svg width="24" height="24" />,
+    whenBusy: "Loading",
   },
   parameters: {
     msw: [
@@ -69,7 +91,7 @@ export const Focus: Story = {
   args: {
     isBusy: false,
     children: "Button AAA",
-    busyText: "Loading",
+    whenBusy: "Loading",
     className: "focus",
   },
   parameters: {
@@ -85,7 +107,7 @@ export const Hover: Story = {
   args: {
     isBusy: false,
     children: "Button AAA",
-    busyText: "Loading",
+    whenBusy: "Loading",
     className: "hover",
   },
   parameters: {
@@ -101,7 +123,7 @@ export const Disabled: Story = {
   args: {
     isBusy: false,
     children: "Button AAA",
-    busyText: "Loading",
+    whenBusy: "Loading",
     disabled: true,
   },
   parameters: {

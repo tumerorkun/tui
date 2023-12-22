@@ -2,8 +2,14 @@ import { Meta, Canvas, Controls, Story, Primary } from "@storybook/blocks";
 import { ColorGroups } from ".";
 import * as Stories from "./index.stories";
 
-<Meta title="Colors" of={Stories} />
+<Meta title="Colors" of={Stories} layout="fullscreen" />
 
 <ColorGroups />
 
-{/* <ColorSet /> */}
+<style>
+  {`
+.sbdocs-content {
+    max-width:100%;
+}
+`}
+</style>

@@ -1,13 +1,21 @@
-import { PropsWithChildren, forwardRef, useCallback, useState } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  forwardRef,
+  useCallback,
+  useState,
+} from "react";
 import styles from "./styles.module.scss";
 import commonStyles from "../../styles/common.module.scss";
+import "./variants.scss";
 import { useRefMiddleware } from "../../hooks/useRefMiddleware";
 
 type Props = PropsWithChildren<{
   isBusy?: boolean;
   disabled?: boolean;
   className?: string;
-  busyText?: string;
+  whenBusy?: ReactNode;
+  variant?: "primary" | "secondary" | "ghost" | "tertiary" | "danger" | string;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => void | Promise<void>;
@@ -19,9 +27,10 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       children,
       onClick,
       isBusy = false,
-      busyText,
+      whenBusy,
       className,
       disabled = false,
+      variant = "primary",
     },
     ref
   ) => {
@@ -35,9 +44,12 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         if (onClick) {
           setIsEventBusy(true);
-          await onClick(e);
-          if (buttonRef.current) {
-            setIsEventBusy(false);
+          try {
+            await onClick(e);
+          } finally {
+            if (buttonRef.current) {
+              setIsEventBusy(false);
+            }
           }
         }
       },
@@ -50,14 +62,20 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <button
         ref={refMapper}
         disabled={disabled}
-        className={`${styles.button} ${csName}`.trim()}
+        className={`tui-button ${variant} ${styles.button} ${csName}`.trim()}
         aria-busy={isButtonBusy}
         onClick={isButtonBusy ? undefined : onClickHandler}
       >
-        <div className={styles.content}>{children}</div>
+        <div
+          className={`${styles.content} ${
+            isButtonBusy ? commonStyles.hide_with_opacity : ""
+          }`.trim()}
+        >
+          {children}
+        </div>
         {isButtonBusy ? (
           <div className={`${commonStyles.absolute_fill} ${styles.is_busy}`}>
-            <span>{busyText}</span>
+            <span>{whenBusy}</span>
           </div>
         ) : null}
       </button>

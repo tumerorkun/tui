@@ -28,55 +28,72 @@ const components = fs
     };
   }, {});
 
+console.log(components);
+
+const createPlugins = (cssPlugins) => [
+  external(),
+  resolve(),
+  commonjs(),
+  typescript(),
+  ...cssPlugins,
+  terser(),
+];
+
 export default [
   {
-    input: { index: "src/index.ts", ...components },
+    input: { "components/Button/index": "src/components/Button/index.tsx" },
     output: [{ dir: "dist", format: "esm", sourcemap: true }],
-    plugins: [
-      external(),
-      resolve(),
-      commonjs(),
-      typescript(),
+    plugins: createPlugins([
       postcss({
-        extract: true,
         minimize: true,
         namedExports: true,
-        modules: { generateScopedName: classNameHashing },
-      }),
-      terser(),
-    ],
-  },
-  {
-    input: { index: "src/index.ts", ...components },
-    output: [{ dir: "dist", format: "esm", sourcemap: true }],
-    plugins: [
-      external(),
-      resolve(),
-      commonjs(),
-      typescript(),
-      postcss({
-        include: "src/styles/common.module.scss",
-        extract: "common/styles.css",
-        minimize: true,
-        namedExports: true,
-        modules: { generateScopedName: classNameHashing },
-      }),
-      postcss({
         include: "src/components/Button/styles.module.scss",
         extract: "components/Button/index.css",
-        minimize: true,
-        namedExports: true,
         modules: { generateScopedName: classNameHashing },
       }),
       postcss({
-        include: "src/components/ButtonTemp/styles.module.scss",
-        extract: "components/ButtonTemp/index.css",
         minimize: true,
         namedExports: true,
+        include: "src/components/Button/variants.scss",
+        extract: "components/Button/variants.css",
         modules: { generateScopedName: classNameHashing },
       }),
-
-      terser(),
-    ],
+      postcss({
+        minimize: true,
+        namedExports: true,
+        include: "src/styles/common.module.scss",
+        extract: "styles/common.css",
+        modules: { generateScopedName: classNameHashing },
+      }),
+    ]),
+  },
+  {
+    input: {
+      "components/SecondButton/index": "src/components/SecondButton/index.tsx",
+    },
+    output: [{ dir: "dist", format: "esm", sourcemap: true }],
+    plugins: createPlugins([
+      postcss({
+        minimize: true,
+        namedExports: true,
+        include: "src/components/SecondButton/styles.module.scss",
+        extract: "components/SecondButton/index.css",
+        modules: { generateScopedName: classNameHashing },
+      }),
+      postcss({
+        minimize: true,
+        namedExports: true,
+        include: "src/components/SecondButton/variants.scss",
+        extract: "components/SecondButton/variants.css",
+        modules: { generateScopedName: classNameHashing },
+      }),
+      postcss({
+        minimize: true,
+        namedExports: true,
+        include: "src/styles/common.module.scss",
+        extract: "styles/common.css",
+        modules: { generateScopedName: classNameHashing },
+      }),
+    ]),
   },
 ];

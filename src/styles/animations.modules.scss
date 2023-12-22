@@ -1,0 +1,12 @@
+@keyframes rotate-infinity {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate_infinity {
+  animation-name: rotate-infinity;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
