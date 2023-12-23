@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { rest } from "msw";
-import { Button as Component } from ".";
-import { AnimatedReload } from "../../icons/Reload";
+import { Button as Component } from "../components/Button";
+import { AnimatedReload } from "../icons/Reload";
 import { useState } from "react";
 import React from "react";
 
@@ -14,7 +14,6 @@ const meta = {
     // layout: "centered",
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/react/writing-docs/autodocs
-  tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",

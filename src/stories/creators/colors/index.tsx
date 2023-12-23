@@ -1,8 +1,7 @@
-import styles from "./styles.module.scss";
 import { PureArgsTable } from "@storybook/blocks";
 import type { Args } from "@storybook/react";
 import { useEffect, useState } from "react";
-import { normalizeColor } from "../../utils/creators";
+import { normalizeColor } from "../../utils";
 import {
   addNewColorGroup,
   getColorGroupIDs,
@@ -13,9 +12,10 @@ import {
   removeColorGroup,
   setColorGroup,
   setColortoDb,
-} from "../../utils/creators/db";
-import { Button } from "../../components/Button";
+} from "../../utils/db";
+import { Button } from "../../../components/Button";
 import { nanoid } from "nanoid";
+import styles from "./styles.module.scss";
 
 export const Color = ({
   id,
